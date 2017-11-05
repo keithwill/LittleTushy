@@ -13,7 +13,7 @@ namespace LittleTushy
         private static readonly Type ServiceControllerType = typeof(ServiceController);
         private static readonly Type ActionResultType = typeof(ActionResult);
 
-        private static readonly Type TaskType = typeof(Task<>);
+        private static readonly Type TaskType = typeof(Task);
 
         public static IServiceCollection AddLittleTushy(
             this IServiceCollection serviceCollection,
@@ -26,7 +26,12 @@ namespace LittleTushy
             }
             serviceCollection.AddSingleton(littleTushyOptions);
             serviceCollection.AddSingleton<LittleTushyServer>();
-            MapControllers(serviceCollection);
+
+            //Getting the calling assembly relies on who is calling the current method
+            //If you move this line when refactoring into a deeper method...it will break
+            var assembly = Assembly.GetCallingAssembly();
+            MapControllers(serviceCollection, assembly);
+
             return serviceCollection;
         }
 
@@ -44,7 +49,7 @@ namespace LittleTushy
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        server.StartHandlingClient(webSocket);
+                        await server.HandleClientAsync(webSocket);
                     }
                     else
                     {
@@ -60,11 +65,10 @@ namespace LittleTushy
             return app;
         }
 
-        private static void MapControllers(IServiceCollection serviceCollection)
+        private static void MapControllers(IServiceCollection serviceCollection, Assembly assembly)
         {
             var servicesTemp = new Dictionary<string, ServiceControllerDefinition>();
-            var assembly = Assembly.GetCallingAssembly();
-                        var assemblyTypes = assembly.GetTypes();
+            var assemblyTypes = assembly.GetTypes();
 
             foreach (var type in assemblyTypes)
             {
@@ -99,7 +103,7 @@ namespace LittleTushy
                         
                         var returnType = method.ReturnType;
 
-                        if (returnType != TaskType)
+                        if (returnType.BaseType != TaskType)
                         {
                             if (ActionResultType.IsAssignableFrom(returnType))
                             {

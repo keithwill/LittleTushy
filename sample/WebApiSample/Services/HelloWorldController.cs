@@ -4,7 +4,7 @@ using ProtoBuf;
 
 namespace WebApiSample.Services
 {
-    public class HelloController : ServiceController
+    public class HelloWorldController : ServiceController
     {
 
         [Action]

@@ -10,7 +10,7 @@ namespace LittleTushyClient
     public class ServiceClient : IDisposable
     {
 
-        private const int MAX_CLIENTS = 100;
+        private const int MAX_CLIENTS = 1000;
         private ClientWebSocket[] clients = new ClientWebSocket[MAX_CLIENTS];
         private int[] clientStatus = new int[MAX_CLIENTS];
         
@@ -21,7 +21,7 @@ namespace LittleTushyClient
             this.baseUrl = baseUrl;
         }
 
-        public async Task<TResult> RequestAsync<TResult, TRequest>(
+        public async Task<ActionResult<TResult>> RequestAsync<TResult, TRequest>(
             string controllerName,
             string actionName,
             TRequest request
@@ -34,16 +34,34 @@ namespace LittleTushyClient
                 var buffer = new byte[4096];
                 using (var mem = new MemoryStream())
                 {
-                    Serializer.Serialize(mem, request);
-                    mem.Seek(0, SeekOrigin.Begin);
                     
+                    Serializer.Serialize(mem, request);
+
+                    var requestContentsBytes = mem.ToArray();
+                    
+                    mem.SetLength(0);
+                    mem.Seek(0, SeekOrigin.Begin);
+
+                    var actionRequest = new ActionRequest
+                    {
+                        Action = actionName,
+                        Controller = controllerName,
+                        Contents = requestContentsBytes
+                    };
+
+                    Serializer.Serialize(mem, actionRequest);
+                    mem.Seek(0, SeekOrigin.Begin);
+
                     int read;
                     do
                     {
-                        if ((read = mem.Read(buffer, 0, buffer.Length)) > 0)
+
+                        int readLength = mem.Length > buffer.Length ? buffer.Length : (int)mem.Length;
+
+                        if ((read = mem.Read(buffer, 0, readLength)) > 0)
                         {
                             await socket.SendAsync(
-                                new ArraySegment<byte>(buffer),
+                                new ArraySegment<byte>(buffer, 0, readLength),
                                 WebSocketMessageType.Binary,
                                 !(read == buffer.Length),
                                 CancellationToken.None
@@ -76,9 +94,17 @@ namespace LittleTushyClient
 
                     mem.Seek(0, SeekOrigin.Begin);
 
-                    var result = Serializer.Deserialize<TResult>(mem);
+                    var resultAction = Serializer.Deserialize<ActionResult<TResult>>(mem);
 
-                    return result;
+                    mem.SetLength(0);
+                    mem.Seek(0, SeekOrigin.Begin);
+
+                    mem.Write(resultAction.Contents, 0, resultAction.Contents.Length);
+                    mem.Seek(0, SeekOrigin.Begin);
+
+                    resultAction.Result = Serializer.Deserialize<TResult>(mem);
+
+                    return resultAction;
                 }
             }
             finally
