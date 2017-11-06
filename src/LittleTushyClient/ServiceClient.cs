@@ -24,7 +24,8 @@ namespace LittleTushyClient
         public async Task<ActionResult<TResult>> RequestAsync<TResult, TRequest>(
             string controllerName,
             string actionName,
-            TRequest request
+            TRequest request = default(TRequest),
+            CancellationToken cancellationToken = default(CancellationToken)
         )
         {
             var socket = await GetWebSocket();
@@ -64,7 +65,7 @@ namespace LittleTushyClient
                                 new ArraySegment<byte>(buffer, 0, readLength),
                                 WebSocketMessageType.Binary,
                                 !(read == buffer.Length),
-                                CancellationToken.None
+                                cancellationToken
                             );
                         }
 
@@ -77,14 +78,14 @@ namespace LittleTushyClient
                     do
                     {
                         var receiveSegment = new ArraySegment<byte>(buffer);
-                        recieveResult = await socket.ReceiveAsync(receiveSegment, CancellationToken.None);
+                        recieveResult = await socket.ReceiveAsync(receiveSegment, cancellationToken);
 
                         if (recieveResult.MessageType == WebSocketMessageType.Close)
                         {
                             await socket.CloseAsync(
                                 WebSocketCloseStatus.NormalClosure,
                                 "",
-                                CancellationToken.None
+                                cancellationToken
                             );
                         }
 
