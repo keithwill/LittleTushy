@@ -4,9 +4,9 @@ VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C8FCCC96-1F50-48AB-ACDA-3E7B82076E1F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LittleTushy.Server", "src\LittleTushyServer\LittleTushy.Server.csproj", "{4AD38573-B6BD-43FA-A2AD-FB1E88F8FA7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LittleTushy.Server", "src\LittleTushy.Server\LittleTushy.Server.csproj", "{4AD38573-B6BD-43FA-A2AD-FB1E88F8FA7A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LittleTushy.Client", "src\LittleTushyClient\LittleTushy.Client.csproj", "{5B6EA4DD-C5F1-4605-BD45-695F6A4438BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LittleTushy.Client", "src\LittleTushy.Client\LittleTushy.Client.csproj", "{5B6EA4DD-C5F1-4605-BD45-695F6A4438BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{712AA6E0-0952-4EE7-9FF8-29E679CCFA3C}"
 EndProject

@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LittleTushyServer\LittleTushyServer.csproj" />
-    <ProjectReference Include="..\..\src\LittleTushyClient\LittleTushyClient.csproj" />
+    <ProjectReference Include="..\..\src\LittleTushy.Server\LittleTushy.Server.csproj" />
+    <ProjectReference Include="..\..\src\LittleTushy.Client\LittleTushy.Client.csproj" />
   </ItemGroup>
 
 </Project>
