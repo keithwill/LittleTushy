@@ -1,5 +1,7 @@
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/y06lq27jfsi2iweh/branch/master?svg=true)](https://ci.appveyor.com/project/keithwill/littletushy)
 
+[![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/keithwill/LittleTushy/blob/master/LICENSE.txt)
+
 # Introduction 
 Little Tushy is a websocket based client-server library for when you need to casually call  backend service and you want the following characteristics:
 
@@ -64,13 +66,3 @@ The primary use would be to call a backend or micro service from your Web API or
 Web sockets are initiated over normal Http/Https requests to a special path, and can be load balancer friendly and hosted on Azure App Services.
 
 Protobuf serialized messages are backwards compatible, very compact, and serialize and deserialize quickly compared to XML or JSON.
-<!-- # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore) -->
