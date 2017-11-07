@@ -1,3 +1,6 @@
+Build Status:[![AppVeyor](https://ci.appveyor.com/api/projects/status/y06lq27jfsi2iweh/branch/master?svg=true)](https://ci.appveyor.com/project/keithwill/littletushy)
+
+
 # Introduction 
 Little Tushy is a websocket based client-server library meant to make it
 easier to casually call and host back-end services.
