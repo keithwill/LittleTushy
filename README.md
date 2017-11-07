@@ -1,45 +1,43 @@
-Build Status:[![AppVeyor](https://ci.appveyor.com/api/projects/status/y06lq27jfsi2iweh/branch/master?svg=true)](https://ci.appveyor.com/project/keithwill/littletushy)
-
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/y06lq27jfsi2iweh/branch/master?svg=true)](https://ci.appveyor.com/project/keithwill/littletushy)
 
 # Introduction 
-Little Tushy is a websocket based client-server library meant to make it
-easier to casually call and host back-end services.
+Little Tushy is a websocket based client-server library for when you need to casually call  backend service and you want the following characteristics:
 
-# Why
-
-The desire existed for a library that would allow calling out to backend services that would
-fit the following goals:
-
-*  Load Balancer Friendly
 *  Low Latency
 *  Efficient and Backwards Compatible Request and Reply Serialization
 *  Async friendly
 *  Minimal configuration and setup
 *  Conventions familiar to aspnet developers (web api in particular)
 
-There are many options for hosting or calling a backend service in .NET, but
-most libraries are ambivalent about how they should be configured and incorporated
-into a project, or they were designed for a different purpose.
+This project was created because:
 
-SignalR is a great library and full featured, but was not designed for making server to
-server calls. Its primary use-case is for connecting end user clients to a web server
-for push notifications and RPC. For example, the client is limited to sending and receiving
-only one request at a time.
+*  SignalR doesn't have a high performance server to server client
+*  Brokered Messaging adds extra network latency and project complexity
+*  NetMQ thinks developers shouldn't be allowed to use threads
+*  Using TcpClient / TcpListener for each project is too much boilerplate
 
-ZeroMQ / NetMQ are high performance options for communicating between servers, but
-their foreign multithreading model and lack of async and await support mean that they
-are difficult to incorporate properly into most projects and can't always take full 
-advantage of I/O completion ports. Figuring out how to transition a request behind a load
-balancer is also difficult.
+# Requirements
 
-TcpClient and TcpListener are also high performance options, and were considered for the
-implementation of this library, but they suffer from the same issues that ZeroMQ and NetMQ
-do, that using them directly forces you to write more networking code than application code
-and they are overly neutral about request shapes and message multiplexing. They also suffer
-when trying to transition a request to a server behind a load balancer.
+See [ASP.NET Core WebSockets Prerequisites](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/websockets#prerequisites) for detailed requirements to use WebSockets on the server.
 
-Of these SignalR almost meets the requirements, but was not designed in a way to meet the
-goals of Little Tushy.
+There are no special requirements outside of the nuget dependencies to use the client.
+
+All classes used to make requests and responses with Little Tushy must be annotated properly with protobuf-net annotations.
+
+# Getting Started
+
+On the Server
+1.  Create an asp.net core application, and install the LittleTushy.Server nuget package
+2.  In the ConfigureServices method in your Startup class, call AddLittleTushy on the services collection
+3.  In the Configure method in the same file call UseLittleTushy on your application builder
+4.  Add a class that inherits from ServiceController. 
+5.  Add an async method to that class that returns Task<ActionResult> and annotate that method with an 'Action' attributes.
+
+On the Client
+1.  In your client application, install the LittleTushy.Client nuget package
+2.  Create an instance of ServiceClient with the server and port location of your service application
+3.  Keep an instance of ServiceClient around for each server you connect to. It has similar characteristics to an HttpClient. Its thread safe and has much better performance if you don't reinstantiate it every time you use it.
+4.  Make a call to RequestAsync on the client, and pass in the controller and action name you setup on the server earlier.
 
 # What it does
 Little Tushy is an asp.net core middleware that can be cofigured and added to a project
@@ -59,20 +57,13 @@ Results are wrapped a very small result class called an ActionResult which inclu
 Inheriting from a ServiceController gives your controller classes access to a series of convenience methods for returning a payload or messages with various status codes in a way
 that is similar to a web api controller returning an IHttpActionResult (e.g. 'Ok(someResult)').
 
-# Getting Started
-For a new asp.net core web api or web application:
-1.  Install the Little Tushy Server nuget package
-2.  Find your configure services method and call AddLittleTushy on your service collection (add the LittleTushyServer namespace first)
-3.  Find your configure method and call UseLittleTushy on your application builder
-4.  Add classes that inherit from ServiceController. 
-5.  Add async methods to those classes that return Task<ActionResult> and annotate those classes with 'Action' attributes.
-6.  In your calling application or library, install the Little Tushy Client nuget package
-7.  Create an instance of ServiceClient with your first applications hostname. This client is like HttpClient, and only one client per server is necessary and is designed to be used as a shared instance. You should not instantiate and dispose of this object for every request
-8.  Call RequestAsync on the client with the request and response generic type, as well as
-the controller name, action name, and request parameter specified. It is safe to call this from
-multiple threads at the same time, as the client maintains a very simple first-available pool of
-websocket connections to the server.
+# Why would I use this?
 
+The primary use would be to call a backend or micro service from your Web API or Application tier, particularly in cases where you control the code on both sides.
+
+Web sockets are initiated over normal Http/Https requests to a special path, and can be load balancer friendly and hosted on Azure App Services.
+
+Protobuf serialized messages are backwards compatible, very compact, and serialize and deserialize quickly compared to XML or JSON.
 <!-- # Build and Test
 TODO: Describe and show how to build your code and run the tests. 
 
