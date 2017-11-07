@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>LittleTushy.Client</id>
+    <version>0.0.0.1</version>
+    <title>Little Tushy Client</title>
+    <authors>Keith Williams</authors>
+    <owners>Keith Williams</owners>
+    <licenseUrl>https://github.com/keithwill/LittleTushy/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/keithwill/LittleTushy</projectUrl>
+    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A C# client for making requests to Little Tushy services</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags></tags>
+  </metadata>
+</package>
