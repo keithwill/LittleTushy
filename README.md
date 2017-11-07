@@ -20,9 +20,7 @@ This project was created because:
 
 # Requirements
 
-See [ASP.NET Core WebSockets Prerequisites](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/websockets#prerequisites) for detailed requirements to use WebSockets on the server.
-
-There are no special requirements outside of the nuget dependencies to use the client.
+See [ASP.NET Core WebSockets Prerequisites](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/websockets#prerequisites) for detailed requirements to use WebSockets.
 
 All classes used to make requests and responses with Little Tushy must be annotated properly with protobuf-net annotations.
 
