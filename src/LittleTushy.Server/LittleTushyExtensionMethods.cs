@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LittleTushy
+namespace LittleTushy.Server
 {
     public static class LittleTushyExtensionMethods
     {

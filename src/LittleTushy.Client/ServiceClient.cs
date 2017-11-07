@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ProtoBuf;
 
-namespace LittleTushyClient
+namespace LittleTushy.Client
 {
     public class ServiceClient : IDisposable
     {

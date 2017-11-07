@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace LittleTushy 
+namespace LittleTushy.Server
 {
     
     public abstract class ServiceController {

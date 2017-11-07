@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LittleTushy
+namespace LittleTushy.Server
 {
     /// <summary>
     /// Details about a controller that was detected by LittleTushy on startup 

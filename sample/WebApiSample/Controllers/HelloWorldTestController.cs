@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using LittleTushy;
-using LittleTushyClient;
+using LittleTushy.Server;
+using LittleTushy.Client;
 using System.Diagnostics;
 using System.Net.Http;
 
@@ -23,6 +23,8 @@ namespace WebApiSample.Controllers
         [HttpPost]
         public async Task<string> SayHello(string name)
         {
+            //Fake a very small amount of work
+            await Task.Delay(1);
             return $"Hello {name}";
         }
 

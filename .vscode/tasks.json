@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/sample/WebApiSample/WebApiSample.csproj"
+                "${workspaceRoot}/LittleTushy.sln"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

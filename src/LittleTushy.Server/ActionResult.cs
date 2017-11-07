@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace LittleTushy
+namespace LittleTushy.Server
 {
     [ProtoContract]
     public class ActionResult
