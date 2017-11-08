@@ -10,6 +10,5 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="Fasterflect.Netstandard" Version="[1.0.8,2.0)" />
     <PackageReference Include="protobuf-net" Version="[2.3,3.0)" />
-    <Compile Include="..\LZ4.netcore\**\*.cs" />
   </ItemGroup>
 </Project>

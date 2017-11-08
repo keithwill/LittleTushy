@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using LittleTushy.Server;
+using LittleTushy;
 using ProtoBuf;
 
 namespace WebApiSample.Services

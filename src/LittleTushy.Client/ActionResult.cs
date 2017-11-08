@@ -1,11 +1,10 @@
 using ProtoBuf;
+using LittleTushy;
 
 namespace LittleTushy.Client
 {
-    [ProtoContract]
     public class ActionResult<TResult>
     {
-
         [ProtoMember(1)]
         public StatusCode StatusCode;
 
@@ -14,8 +13,7 @@ namespace LittleTushy.Client
 
         [ProtoMember(3)]
         public byte[] Contents;
-
+        
         public TResult Result { get; set; }
-
     }
 }
