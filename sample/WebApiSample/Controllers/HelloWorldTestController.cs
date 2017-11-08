@@ -30,32 +30,16 @@ namespace WebApiSample.Controllers
         [HttpGet]
         public async Task<string> Get()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
 
-            for(int i = 0; i < 1000; i++)
-            {
-                var response = await client.RequestAsync<string, string>("HelloWorld", "SayHello", "John Doe");
-            }
+            return (
 
-            sw.Stop();
-            var tushyElapsed = sw.Elapsed;
-
-            sw.Reset();
-            sw.Start();
-            using (var httpClient = new HttpClient())
-            {
-                for(int i = 0; i < 1000; i++)
-                {
-                    var httpResult = await httpClient.PostAsync(
-                        "http://localhost:5000/api/HelloWorldTest/SayHello",
-                        new StringContent("John Doe", System.Text.Encoding.UTF8, "text/plain")
-                    );
-                }
-            }
-            var httpElapsed = sw.Elapsed;
-
-            return "Tushy: " + tushyElapsed.TotalMilliseconds + " HTTP: " + httpElapsed.TotalMilliseconds;
+                await client.RequestAsync<string, string>(
+                    "HelloWorld", 
+                    "SayHello",
+                    "John Doe"
+                )
+                
+            ).Result;
 
         }
 
