@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ProtoBuf-Net" Version="2.3.2" />
     <PackageReference Include="System.Net.WebSockets" Version="4.3.0" />
+    <Compile Include="..\LZ4.netcore\**\*.cs" />
   </ItemGroup>
 </Project>
