@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using LittleTushy;
+using LittleTushy.Server;
 using ProtoBuf;
 
 namespace WebApiSample.Services
@@ -10,6 +10,8 @@ namespace WebApiSample.Services
         [Action]
         public async Task<ActionResult> SayHello(string name)
         {
+            //Fake a very small amount of work
+            await Task.Delay(1);
             return Ok($"Hello {name}");
         }        
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LittleTushyClient
+namespace LittleTushy.Client
 {
     [ProtoContract]
     public class ActionRequest

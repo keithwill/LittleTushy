@@ -1,4 +1,4 @@
-namespace LittleTushyClient
+namespace LittleTushy.Client
 {
     public enum StatusCode
     {

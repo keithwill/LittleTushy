@@ -8,8 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using LittleTushy;
-using LittleTushyClient;
+using LittleTushy.Server;
+using LittleTushy.Client;
 
 namespace WebApiSample
 {
@@ -18,7 +18,7 @@ namespace WebApiSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new ServiceClient(new Uri("ws://localhost:5000/lt")));
+            services.AddSingleton(new ServiceClient("localhost", 5000));
             services.AddMvc();
             services.AddLittleTushy();
         }

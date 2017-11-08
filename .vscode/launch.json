@@ -6,7 +6,7 @@
    "configurations": [
 
         {
-            "name": ".NET Core Launch (web)",
+            "name": "WebApiSample",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",

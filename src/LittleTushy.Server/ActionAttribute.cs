@@ -1,4 +1,4 @@
-namespace LittleTushy
+namespace LittleTushy.Server
 {
     /// <summary>
     /// Marks a ServiceController method as being a service operation

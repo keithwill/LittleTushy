@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ProtoBuf;
 
-namespace LittleTushyClient
+namespace LittleTushy.Client
 {
     public class ServiceClient : IDisposable
     {
@@ -13,12 +13,17 @@ namespace LittleTushyClient
         private const int MAX_CLIENTS = 1000;
         private ClientWebSocket[] clients = new ClientWebSocket[MAX_CLIENTS];
         private int[] clientStatus = new int[MAX_CLIENTS];
+
+        private const string CONNECT_PATH = "lt";
         
         private readonly Uri baseUrl;
 
-        public ServiceClient(Uri baseUrl)
+        public ServiceClient(string hostname, int port, bool useSecure = true)
         {
-            this.baseUrl = baseUrl;
+            
+            var scheme = "ws" + (useSecure ? "s" : "");
+
+            this.baseUrl = new Uri($"{scheme}://{hostname}:{port}/{CONNECT_PATH}");
         }
 
         public async Task<ActionResult<TResult>> RequestAsync<TResult, TRequest>(

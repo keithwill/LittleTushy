@@ -1,4 +1,4 @@
-namespace LittleTushy
+namespace LittleTushy.Server
 {
     public class LittleTushyOptions
     {

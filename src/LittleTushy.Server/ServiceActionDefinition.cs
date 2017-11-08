@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LittleTushy
+namespace LittleTushy.Server
 {
     /// <summary>
     /// The definition of a controller action that was detected on startup by LittleTushy
@@ -107,7 +107,7 @@ namespace LittleTushy
                 {
                     return new ActionResult
                     {
-                        Contents = ($"Could not understand the parameter {ParameterName} when deserializing - " + ex.ToString()).ToUTF8Bytes(),
+                        Message = $"Could not understand the parameter {ParameterName} when deserializing - " + ex.ToString(),
                         StatusCode = StatusCode.BadRequest
                     };
                 }

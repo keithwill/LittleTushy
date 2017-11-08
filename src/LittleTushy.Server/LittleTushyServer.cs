@@ -7,7 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ProtoBuf;
 
-namespace LittleTushy {
+namespace LittleTushy.Server
+{
     /// <summary>
     /// Handles requests from the LittleTushyServer.
     /// Uses a service map to locate controllers and actions to handle requests.
@@ -91,7 +92,7 @@ namespace LittleTushy {
             if (action == null) {
                 return new ActionResult {
                 StatusCode = StatusCode.ActionNotFound,
-                Contents = $"Could not find service {request.Controller}/{request.Action}".ToUTF8Bytes (),
+                Message = $"Could not find service {request.Controller}/{request.Action}"
                 };
             }
 
