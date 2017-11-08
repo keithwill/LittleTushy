@@ -14,6 +14,9 @@ namespace LittleTushy.Client
         public string Action;
 
         [ProtoMember(3)]
+        public bool IsCompressed;
+
+        [ProtoMember(4)]
         public byte[] Contents;
         
     }

@@ -13,6 +13,9 @@ namespace LittleTushy.Server
         public string Message;
 
         [ProtoMember(3)]
+        public bool IsCompressed {get;set;}
+
+        [ProtoMember(4)]
         public byte[] Contents;
 
     }
