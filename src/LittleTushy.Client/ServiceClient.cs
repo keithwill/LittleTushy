@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using LittleTushy.Client.LZ4;
 using ProtoBuf;
 
 namespace LittleTushy.Client
@@ -29,7 +30,35 @@ namespace LittleTushy.Client
         public async Task<ActionResult<TResult>> RequestAsync<TResult, TRequest>(
             string controllerName,
             string actionName,
-            TRequest request = default(TRequest),
+            TRequest request,
+            CancellationToken cancellationToken = default(CancellationToken)
+        )
+        {
+            using (var stream = new MemoryStream())
+            {
+                Serializer.Serialize(stream, request);
+                var requestBytes = stream.ToArray();
+                return await RequestWithContents<TResult>(controllerName, actionName, null, stream);
+            }
+        }
+
+        public async Task<ActionResult<TResult>> RequestAsync<TResult>(
+            string controllerName,
+            string actionName,
+            CancellationToken cancellationToken = default(CancellationToken)
+        )
+        {
+            using (var stream = new MemoryStream())
+            {
+                return await RequestWithContents<TResult>(controllerName, actionName, null, stream);
+            }
+        }
+
+        private async Task<ActionResult<TResult>> RequestWithContents<TResult>(
+            string controllerName,
+            string actionName,
+            byte[] requestBytes,
+            MemoryStream stream,
             CancellationToken cancellationToken = default(CancellationToken)
         )
         {
@@ -38,80 +67,73 @@ namespace LittleTushy.Client
             try
             {
                 var buffer = new byte[4096];
-                using (var mem = new MemoryStream())
+                    
+                stream.SetLength(0);
+                stream.Seek(0, SeekOrigin.Begin);
+
+                var actionRequest = new ActionRequest
                 {
-                    
-                    Serializer.Serialize(mem, request);
+                    Action = actionName,
+                    Controller = controllerName,
+                    Contents = requestBytes
+                };
 
-                    var requestContentsBytes = mem.ToArray();
-                    
-                    mem.SetLength(0);
-                    mem.Seek(0, SeekOrigin.Begin);
+                Serializer.Serialize(stream, actionRequest);
+                stream.Seek(0, SeekOrigin.Begin);
 
-                    var actionRequest = new ActionRequest
+                int read;
+                do
+                {
+
+                    int readLength = stream.Length > buffer.Length ? buffer.Length : (int)stream.Length;
+
+                    if ((read = stream.Read(buffer, 0, readLength)) > 0)
                     {
-                        Action = actionName,
-                        Controller = controllerName,
-                        Contents = requestContentsBytes
-                    };
+                        await socket.SendAsync(
+                            new ArraySegment<byte>(buffer, 0, readLength),
+                            WebSocketMessageType.Binary,
+                            !(read == buffer.Length),
+                            cancellationToken
+                        );
+                    }
 
-                    Serializer.Serialize(mem, actionRequest);
-                    mem.Seek(0, SeekOrigin.Begin);
+                } while(read == buffer.Length);
+                
+                stream.SetLength(0);
+                stream.Seek(0, SeekOrigin.Begin);
 
-                    int read;
-                    do
+                WebSocketReceiveResult recieveResult;
+                do
+                {
+                    var receiveSegment = new ArraySegment<byte>(buffer);
+                    recieveResult = await socket.ReceiveAsync(receiveSegment, cancellationToken);
+
+                    if (recieveResult.MessageType == WebSocketMessageType.Close)
                     {
+                        await socket.CloseAsync(
+                            WebSocketCloseStatus.NormalClosure,
+                            "",
+                            cancellationToken
+                        );
+                    }
 
-                        int readLength = mem.Length > buffer.Length ? buffer.Length : (int)mem.Length;
+                    stream.Write (receiveSegment.Array, receiveSegment.Offset, recieveResult.Count);
 
-                        if ((read = mem.Read(buffer, 0, readLength)) > 0)
-                        {
-                            await socket.SendAsync(
-                                new ArraySegment<byte>(buffer, 0, readLength),
-                                WebSocketMessageType.Binary,
-                                !(read == buffer.Length),
-                                cancellationToken
-                            );
-                        }
+                } while (!recieveResult.EndOfMessage);
 
-                    } while(read == buffer.Length);
-                    
-                    mem.SetLength(0);
-                    mem.Seek(0, SeekOrigin.Begin);
+                stream.Seek(0, SeekOrigin.Begin);
 
-                    WebSocketReceiveResult recieveResult;
-                    do
-                    {
-                        var receiveSegment = new ArraySegment<byte>(buffer);
-                        recieveResult = await socket.ReceiveAsync(receiveSegment, cancellationToken);
+                var resultAction = Serializer.Deserialize<ActionResult<TResult>>(stream);
 
-                        if (recieveResult.MessageType == WebSocketMessageType.Close)
-                        {
-                            await socket.CloseAsync(
-                                WebSocketCloseStatus.NormalClosure,
-                                "",
-                                cancellationToken
-                            );
-                        }
+                stream.SetLength(0);
+                stream.Seek(0, SeekOrigin.Begin);
 
-                        mem.Write (receiveSegment.Array, receiveSegment.Offset, recieveResult.Count);
+                stream.Write(resultAction.Contents, 0, resultAction.Contents.Length);
+                stream.Seek(0, SeekOrigin.Begin);
 
-                    } while (!recieveResult.EndOfMessage);
+                resultAction.Result = Serializer.Deserialize<TResult>(stream);
 
-                    mem.Seek(0, SeekOrigin.Begin);
-
-                    var resultAction = Serializer.Deserialize<ActionResult<TResult>>(mem);
-
-                    mem.SetLength(0);
-                    mem.Seek(0, SeekOrigin.Begin);
-
-                    mem.Write(resultAction.Contents, 0, resultAction.Contents.Length);
-                    mem.Seek(0, SeekOrigin.Begin);
-
-                    resultAction.Result = Serializer.Deserialize<TResult>(mem);
-
-                    return resultAction;
-                }
+                return resultAction;
             }
             finally
             {
