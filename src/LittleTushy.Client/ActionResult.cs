@@ -3,6 +3,7 @@ using LittleTushy;
 
 namespace LittleTushy.Client
 {
+    [ProtoContract]
     public class ActionResult<TResult>
     {
         [ProtoMember(1)]

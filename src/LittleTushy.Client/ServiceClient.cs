@@ -38,7 +38,7 @@ namespace LittleTushy.Client
             {
                 Serializer.Serialize(stream, request);
                 var requestBytes = stream.ToArray();
-                return await RequestWithContents<TResult>(controllerName, actionName, null, stream);
+                return await RequestWithContents<TResult>(controllerName, actionName, requestBytes, stream);
             }
         }
 
@@ -124,6 +124,11 @@ namespace LittleTushy.Client
                 stream.Seek(0, SeekOrigin.Begin);
 
                 var resultAction = Serializer.Deserialize<ActionResult<TResult>>(stream);
+
+                if (resultAction.IsCompressed)
+                {
+                    resultAction.Contents = LZ4Codec.Unwrap(resultAction.Contents);
+                }
 
                 stream.SetLength(0);
                 stream.Seek(0, SeekOrigin.Begin);

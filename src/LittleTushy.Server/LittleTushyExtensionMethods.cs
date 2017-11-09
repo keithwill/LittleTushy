@@ -107,7 +107,13 @@ namespace LittleTushy.Server
                         {
                             if (ActionResultType.IsAssignableFrom(returnType))
                             {
-                                actions.Add(new ServiceActionDefinition(serviceController.Name, method.Name, method, returnType, false));
+                                actions.Add(new ServiceActionDefinition(
+                                    serviceController.Name,
+                                     method.Name,
+                                      method,
+                                       returnType,
+                                        false, 
+                                        operationAttribute.Compress));
                                 continue;
                             }
                             else
@@ -124,7 +130,13 @@ namespace LittleTushy.Server
 
                             if (ActionResultType.IsAssignableFrom(taskResultType))
                             {
-                                actions.Add(new ServiceActionDefinition(serviceController.Name, method.Name, method, returnType, true));
+                                actions.Add(new ServiceActionDefinition(
+                                    serviceController.Name,
+                                     method.Name,
+                                      method,
+                                       returnType,
+                                        true,
+                                        operationAttribute.Compress));
                                 continue;
                             }
                             else

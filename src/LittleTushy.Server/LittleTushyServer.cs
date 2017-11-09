@@ -5,6 +5,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LittleTushy.Server.LZ4;
 using ProtoBuf;
 
 namespace LittleTushy.Server
@@ -98,7 +99,15 @@ namespace LittleTushy.Server
 
             var controllerInstance = serviceProvider.GetService (action.ControllerType) as ServiceController;
 
-            return await action.InvokeFunction (controllerInstance, request.Contents);
+            var actionResult = await action.InvokeFunction (controllerInstance, request);
+
+            if (action.Compress)
+            {
+                actionResult.Contents = LZ4Codec.Wrap(actionResult.Contents);
+                actionResult.IsCompressed = true;                
+            }
+
+            return actionResult;
 
         }
 

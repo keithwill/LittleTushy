@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using LittleTushy.Server.LZ4;
 
 namespace LittleTushy.Server
 {
@@ -34,6 +35,7 @@ namespace LittleTushy.Server
         /// </summary>
         public readonly Type ReturnType;
         private readonly bool isAsync;
+        public readonly bool Compress;
         private readonly MethodInvoker invoker;
 
         /// <summary>
@@ -62,13 +64,21 @@ namespace LittleTushy.Server
         /// <param name="action">The name of the method on the controller</param>
         /// <param name="methodInfo">The reflection methodInfo for the method</param>
         /// <param name="returnType">The 'payload' Type of the method (ignoring the Task and ServiceResponse generic wrapping)</param>
-        public ServiceActionDefinition(string controller, string action, MethodInfo methodInfo, Type returnType, bool isAsync)
+        public ServiceActionDefinition(
+            string controller, 
+            string action, 
+            MethodInfo methodInfo, 
+            Type returnType, 
+            bool isAsync,
+            bool compress
+            )
         {
             this.Controller = controller;
             this.Action = action;
             this.methodInfo = methodInfo;
             this.ReturnType = returnType;
             this.isAsync = isAsync;
+            this.Compress = compress;
             this.ControllerType = methodInfo.DeclaringType;
             invoker = methodInfo.DelegateForCallMethod();
             var parameters = methodInfo.GetParameters();
@@ -90,17 +100,29 @@ namespace LittleTushy.Server
         /// <returns>Returns an async task to await the untyped result of the controller action that was invoked.
         /// This is expected to be a generic variant of ServiceResponse where the generic
         /// parameter is serializable by protobuf.</returns>
-        public async Task<ActionResult> InvokeFunction(ServiceController controller, byte[] parameter)
+        public async Task<ActionResult> InvokeFunction(ServiceController controller, ActionRequest request)
         {
 
+            byte[] parameter = request.Contents;
             if (HasParameter)
             {
                 object parameterInstance;
                 try
                 {
+                    
                     using (var mem = new MemoryStream(parameter))
                     {
-                        parameterInstance = Serializer.Deserialize(ParameterType, mem);
+                        if (request.IsCompressed)
+                        {
+                            using (var lz4stream = new LZ4Stream(mem, LZ4StreamMode.Decompress))
+                            {
+                                parameterInstance = Serializer.Deserialize(ParameterType, lz4stream);
+                            }
+                        }
+                        else
+                        {
+                            parameterInstance = Serializer.Deserialize(ParameterType, mem);
+                        }
                     }
                 }
                 catch (ProtoException ex)
@@ -115,7 +137,6 @@ namespace LittleTushy.Server
                 if (isAsync)
                 {
                     return await (Task<ActionResult>)invoker(controller, parameterInstance);
-
                 }
                 else
                 {

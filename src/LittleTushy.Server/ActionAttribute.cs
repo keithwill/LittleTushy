@@ -8,6 +8,6 @@ namespace LittleTushy.Server
     /// </summary>
     public class ActionAttribute : System.Attribute
     {
-
+        public bool Compress {get;set;}
     }
 }

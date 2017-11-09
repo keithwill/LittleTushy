@@ -8,7 +8,7 @@ namespace WebApiSample.Services
     public class HelloWorldController : ServiceController
     {
 
-        [Action]
+        [Action(Compress = true)]
         public async Task<ActionResult> SayHello(string name)
         {
             //Fake a very small amount of work
