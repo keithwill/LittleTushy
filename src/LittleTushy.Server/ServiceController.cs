@@ -3,6 +3,11 @@ using ProtoBuf;
 namespace LittleTushy.Server
 {
     
+    /// <summary>
+    /// A base class for all Service Controller instances that handle Little Tushy requests.
+    /// This can be used like Web API controllers and contains convencience methods for formatting
+    /// results
+    /// </summary>
     public abstract class ServiceController {
 
         public ActionResult Ok(object contents)

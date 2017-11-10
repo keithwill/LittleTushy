@@ -3,6 +3,11 @@ using System;
 
 namespace LittleTushy.Client
 {
+    /// <summary>
+    /// Action requests are used as a wrapper around all Little Tushy requests
+    /// and have just enough information to locate the controller action to handle
+    /// the request, the binary payload, and information about compression of the payload
+    /// </summary>
     [ProtoContract]
     public class ActionRequest
     {

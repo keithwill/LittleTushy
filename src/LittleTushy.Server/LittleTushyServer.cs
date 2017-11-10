@@ -30,6 +30,9 @@ namespace LittleTushy.Server
             this.serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Start handling requests and replies from the connected web socket
+        /// </summary>
         public async Task HandleClientAsync (WebSocket webSocket) {
 
             var receiveBuffer = new byte[4096];

@@ -28,17 +28,24 @@ namespace WebApiSample.Controllers
             return $"Hello {name}";
         }
 
-        // GET api/values
+        /// <summary>
+        /// This is a web api operation that uses the Little Tushy client to connect to localhost
+        /// and call a controller action (hosted in this same web application using Little Tushy
+        /// server) that just gets back a hello string that includes the name passed to the
+        /// Service Controller
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<string> Get()
         {
 
             return (
 
-                await client.RequestAsync<string, string>(
-                    "HelloWorld", 
-                    "SayHello",
-                    "John Doe"
+                await client.RequestAsync<string, string>
+                (
+                    "HelloWorld", //controller
+                    "SayHello", //action
+                    "John Doe" //parameter
                 )
                 
             ).Result;

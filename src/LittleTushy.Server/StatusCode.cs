@@ -1,5 +1,9 @@
 namespace LittleTushy.Server
 {
+    /// <summary>
+    /// Standard status codes returned from a controller action call.
+    /// These have be broadly pulled from HTTP status codes for familiarity.
+    /// </summary>
     public enum StatusCode
     {
         Unknown = 0,

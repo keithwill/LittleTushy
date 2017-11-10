@@ -2,6 +2,9 @@ using ProtoBuf;
 
 namespace LittleTushy.Server
 {
+    /// <summary>
+    /// Action results are used as a wrapper around all responses from controller action methods
+    /// </summary>
     [ProtoContract]
     public class ActionResult
     {

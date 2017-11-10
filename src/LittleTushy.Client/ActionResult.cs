@@ -3,6 +3,13 @@ using LittleTushy;
 
 namespace LittleTushy.Client
 {
+    /// <summary>
+    /// All Little Tushy server responses are wrapped in an ActionResult
+    /// to give access to Http style status codes, the payload, and an 
+    /// optional message. On the client side the ActionResult class is
+    /// typed to the result type of the RequestAsync method called
+    /// to create it 
+    /// </summary>
     [ProtoContract]
     public class ActionResult<TResult>
     {

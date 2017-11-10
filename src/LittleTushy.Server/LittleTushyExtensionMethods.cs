@@ -15,6 +15,15 @@ namespace LittleTushy.Server
 
         private static readonly Type TaskType = typeof(Task);
 
+        /// <summary>
+        /// Configures Little Tushy and adds it to the services collection.
+        /// This will reflect over types from the calling project, and register
+        /// Classes that inherit from ServiceController and put them and their methods
+        /// into the service map.
+        /// </summary>
+        /// <param name="serviceCollection"></param>
+        /// <param name="littleTushyOptions"></param>
+        /// <returns></returns>
         public static IServiceCollection AddLittleTushy(
             this IServiceCollection serviceCollection,
             LittleTushyOptions littleTushyOptions = null
@@ -35,6 +44,9 @@ namespace LittleTushy.Server
             return serviceCollection;
         }
 
+        /// <summary>
+        /// Add the Little Tushy middleware to the application to start listening for web socket requests
+        /// </summary>
         public static IApplicationBuilder UseLittleTushy(this IApplicationBuilder app)
         {
 
@@ -65,6 +77,9 @@ namespace LittleTushy.Server
             return app;
         }
 
+        /// <summary>
+        /// Find the the ServiceControllers and register them and add their methods to the service map
+        /// </summary>
         private static void MapControllers(IServiceCollection serviceCollection, Assembly assembly)
         {
             var servicesTemp = new Dictionary<string, ServiceControllerDefinition>();
@@ -81,6 +96,9 @@ namespace LittleTushy.Server
         }
 
 
+        /// <summary>
+        /// Map each service controller's Action annotated methods to the service map
+        /// </summary>
         private static void MapType(IServiceCollection serviceCollection, Dictionary<string, ServiceControllerDefinition> servicesTemp, Type type)
         {
             if (type.BaseType == ServiceControllerType)
