@@ -23,7 +23,7 @@ namespace WebApiSample
             /// side of your application, but in this sample app we both host and call
             /// a Little Tushy service
             /// </summary>
-            services.AddSingleton(new ServiceClient("localhost", 5000, false));
+            services.AddSingleton(new ServiceClient("littletushysample.azurewebsites.net", 80, false));
 
             services.AddMvc();
             

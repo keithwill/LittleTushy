@@ -20,10 +20,12 @@ namespace WebApiSample.Controllers
             this.client = client;
         }
 
-        [HttpPost]
+        
+
+        [HttpGet]
+        [Route("/SayHello/{name}")]
         public async Task<string> SayHello(string name)
         {
-            //Fake a very small amount of work
             return $"Hello {name}";
         }
 
