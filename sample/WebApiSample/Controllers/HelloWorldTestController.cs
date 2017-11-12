@@ -21,7 +21,6 @@ namespace WebApiSample.Controllers
         }
 
         [HttpGet]
-        [Route("api/LoremIpsum")]
         public async Task<string> LoremIpsum()
         {
             return @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mi tellus, semper vitae auctor vel, sollicitudin quis sem. Maecenas ultricies vehicula accumsan. Praesent laoreet fringilla turpis. Aenean venenatis faucibus erat nec consectetur. Etiam rhoncus cursus tellus, rutrum molestie libero laoreet sed. Nam turpis neque, tempor id eleifend id, molestie in mi. Ut erat ante, tempus eu ullamcorper eu, porta in purus. Praesent pretium ex tincidunt purus tempor semper. Quisque eros lectus, varius vel est vitae, hendrerit auctor magna. Vivamus hendrerit tellus a nisl pulvinar maximus. Suspendisse feugiat magna felis, a volutpat odio imperdiet nec. Integer vel orci quis enim ultrices dapibus. Pellentesque tincidunt sem orci, vitae cursus augue faucibus eget. In accumsan sem ac nisi tincidunt dignissim.
@@ -189,7 +188,7 @@ Sed at tincidunt magna. Maecenas eget pellentesque dolor. Quisque eleifend erat 
                 for(int i = 0; i < 1000; i++)
                 {
                     var httpResult = await 
-                    httpClient.GetStringAsync(new Uri("http://littletushysample.azurewebsites.net/api/LoremIpsum"));
+                    httpClient.GetStringAsync(new Uri("http://littletushysample.azurewebsites.net/api/HelloWorldTest/LoremIpsum"));
                 }
             }
 
