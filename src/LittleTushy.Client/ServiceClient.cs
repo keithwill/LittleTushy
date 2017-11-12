@@ -164,18 +164,25 @@ namespace LittleTushy.Client
 
                 var resultAction = Serializer.Deserialize<ActionResult<TResult>>(stream);
 
-                if (resultAction.IsCompressed)
+                if (resultAction.Contents != null)
                 {
-                    resultAction.Contents = LZ4Codec.Unwrap(resultAction.Contents);
+
+                    if (resultAction.IsCompressed)
+                    {
+                        resultAction.Contents = LZ4Codec.Unwrap(resultAction.Contents);
+                    }
+
+
+                    stream.SetLength(0);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    stream.Write(resultAction.Contents, 0, resultAction.Contents.Length);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    resultAction.Result = Serializer.Deserialize<TResult>(stream);
                 }
 
-                stream.SetLength(0);
-                stream.Seek(0, SeekOrigin.Begin);
-
-                stream.Write(resultAction.Contents, 0, resultAction.Contents.Length);
-                stream.Seek(0, SeekOrigin.Begin);
-
-                resultAction.Result = Serializer.Deserialize<TResult>(stream);
 
                 return resultAction;
             }
