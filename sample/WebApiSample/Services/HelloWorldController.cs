@@ -28,9 +28,6 @@ namespace WebApiSample.Services
         public async Task<ActionResult> SayHello(string name)
         {
 
-            //Fake a very small amount of work
-            await Task.Delay(1);
-
             //Convenience methods for serializing the result contents
             //and setting the status code are the preferred way to return
             //from a service method, but there is no magic in the convenience methods

@@ -24,7 +24,6 @@ namespace WebApiSample.Controllers
         public async Task<string> SayHello(string name)
         {
             //Fake a very small amount of work
-            await Task.Delay(1);
             return $"Hello {name}";
         }
 
